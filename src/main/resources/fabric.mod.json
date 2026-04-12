@@ -19,7 +19,7 @@
 			"net.theblindbandi6.lovelybites.LovelyBites"
 		],
 		"fabric-datagen": [
-			"net.theblindbandi6.lovelybites.LovelyBitesDataGenerator"
+			"net.theblindbandi6.lovelybites.datagen.LovelyBitesDataGenerator"
 		]
 	},
 	"mixins": [

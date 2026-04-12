@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/tinted_cross",
+  "textures": {
+    "cross": "lovely_bites:block/strawberry_bush"
+  }
+}
