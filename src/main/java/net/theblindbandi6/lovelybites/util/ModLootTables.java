@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ModLootTables {
-    private static final Set<ResourceKey<LootTable>> LOCATIONS = new HashSet();
+    private static final Set<ResourceKey<LootTable>> LOCATIONS = new HashSet<>();
     private static final Set<ResourceKey<LootTable>> IMMUTABLE_LOCATIONS = Collections.unmodifiableSet(LOCATIONS);
 
     //Loot Table IDs

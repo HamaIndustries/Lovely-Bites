@@ -19,6 +19,7 @@ import java.util.function.Function;
 public class ModItems {
     //Items
     public static final Item STRAWBERRY = register("strawberry", Item::new, new Item.Properties().food(ModFoods.STRAWBERRY));
+    public static final Item CHOCOLATE = register("chocolate", Item::new, new Item.Properties().food(ModFoods.CHOCOLATE));
 
     //Block Items
     public static final Item STRAWBERRY_SEEDS = register("strawberry_seeds", settings ->

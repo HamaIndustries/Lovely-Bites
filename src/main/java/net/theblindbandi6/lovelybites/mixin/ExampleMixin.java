@@ -1,6 +1,7 @@
 package net.theblindbandi6.lovelybites.mixin;
 
 import net.minecraft.server.MinecraftServer;
+import net.theblindbandi6.lovelybites.LovelyBites;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ExampleMixin {
 	@Inject(at = @At("HEAD"), method = "loadLevel")
 	private void init(CallbackInfo info) {
+		LovelyBites.LOGGER.info("Testing example mixin");
 		// This code is injected into the start of MinecraftServer.loadLevel()V
 	}
 }
