@@ -11,12 +11,15 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.UseCooldown;
+import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.theblindbandi6.lovelybites.util.ModTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,14 +43,6 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
             Player feeder = (Player) (Object) this;
             //Gets the item in the feeder's main interaction hand (Only done for offhand)
             ItemStack stack = feeder.getItemInHand(hand);
-            //Checks if the item in hand is part of the "FEEDABLE_FOODS" tag
-            boolean hasFood = stack.is(ModTags.FEEDABLE_FOODS);
-            //Stops running if item isn't part of the tag
-            if (!hasFood) {
-                //Fails if item isn't part of tag
-                //LovelyBites.LOGGER.info("Detected no sweet treat");
-                cir.setReturnValue(InteractionResult.PASS);
-            } else {
                 //Checks for the food data component on the item
                 FoodProperties food = stack.get(DataComponents.FOOD);
                 //Stops if the item doesn't have a food component
@@ -68,7 +63,8 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                         if (consumable != null) {
                             //Applies the effects in the component
                             List<ConsumeEffect> effects = consumable.onConsumeEffects();
-                            effects.forEach(action -> action.apply(level, stack, targetPlayer));
+                            ItemStack finalStack = stack;
+                            effects.forEach(action -> action.apply(level, finalStack, targetPlayer));
                         }
                         //Plays an eating sound
                         level.playSound(targetPlayer, pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -86,7 +82,14 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                         }
                         //Consumes an item in the stack and add a cooldown to prevent spamming in survival
                         if (!feeder.isCreative()) {
-                            stack.shrink(1);
+                            //Checks for a remainder e.g. Mushroom stew into bowl
+                            int beforeUseCount = stack.getCount();
+                            UseRemainder useRemainder = stack.get(DataComponents.USE_REMAINDER);
+                            stack.consume(1, feeder);
+                            if (useRemainder != null) {
+                                ItemStack newHandStack = useRemainder.convertIntoRemainder(stack, beforeUseCount, feeder.hasInfiniteMaterials(), feeder::handleExtraItemsCreatedOnUse);
+                                feeder.setItemInHand(hand, newHandStack);
+                            }
                             feeder.getCooldowns().addCooldown(stack, 32);
                         }
                         cir.setReturnValue(InteractionResult.SUCCESS);
@@ -101,7 +104,6 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                     cir.setReturnValue(InteractionResult.PASS);
                 }
             }
-        }
         return InteractionResult.PASS;
     }
 }
