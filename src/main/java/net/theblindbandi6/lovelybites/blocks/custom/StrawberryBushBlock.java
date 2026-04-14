@@ -57,7 +57,7 @@ public class StrawberryBushBlock extends VegetationBlock implements Bonemealable
 
     @Override
     protected ItemStack getCloneItemStack(final LevelReader level, final BlockPos pos, final BlockState state, final boolean includeData) {
-        return new ItemStack(ModItems.STRAWBERRY);
+        return new ItemStack(ModItems.STRAWBERRY_SEEDS);
     }
 
     @Override

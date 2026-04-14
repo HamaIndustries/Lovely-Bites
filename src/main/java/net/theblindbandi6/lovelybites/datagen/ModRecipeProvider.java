@@ -10,6 +10,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.theblindbandi6.lovelybites.items.ModItems;
+import net.theblindbandi6.lovelybites.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,16 +31,25 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(ModItems.STRAWBERRY), has(ModItems.STRAWBERRY))
                         .save(output);
 
-                shapeless(RecipeCategory.FOOD, ModItems.CHOCOLATE, 2)
+                shapeless(RecipeCategory.FOOD, ModItems.CHOCOLATE, 4)
                         .requires(Items.MILK_BUCKET)
                         .requires(Items.COCOA_BEANS, 4)
                         .unlockedBy(getHasName(Items.COCOA_BEANS), has(Items.COCOA_BEANS))
                         .save(output);
 
-                shapeless(RecipeCategory.FOOD, ModItems.CHOCOLATE_STRAWBERRY, 8)
+                shapeless(RecipeCategory.FOOD, ModItems.CHOCOLATE_STRAWBERRY, 1)
                         .requires(ModItems.CHOCOLATE)
-                        .requires(ModItems.STRAWBERRY, 8)
+                        .requires(ModTags.STRAWBERRIES)
                         .unlockedBy(getHasName(ModItems.CHOCOLATE), has(ModItems.CHOCOLATE))
+                        .save(output);
+
+                shapeless(RecipeCategory.FOOD, ModItems.STRAWBERRY_JAM, 1)
+                        .requires(Items.GLASS_BOTTLE)
+                        .requires(Items.SUGAR, 3)
+                        .requires(ModTags.STRAWBERRIES)
+                        .requires(ModTags.STRAWBERRIES)
+                        .requires(ModTags.STRAWBERRIES)
+                        .unlockedBy(getHasName(ModItems.STRAWBERRY), has(ModItems.STRAWBERRY))
                         .save(output);
             }
         };

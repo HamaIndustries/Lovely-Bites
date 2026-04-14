@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glass_bottle",
+    "minecraft:sugar",
+    "minecraft:sugar",
+    "minecraft:sugar",
+    "#lovely_bites:strawberries",
+    "#lovely_bites:strawberries",
+    "#lovely_bites:strawberries"
+  ],
+  "result": {
+    "id": "lovely_bites:strawberry_jam"
+  }
+}

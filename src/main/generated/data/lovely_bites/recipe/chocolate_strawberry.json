@@ -3,17 +3,9 @@
   "category": "misc",
   "ingredients": [
     "lovely_bites:chocolate",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry",
-    "lovely_bites:strawberry"
+    "#lovely_bites:strawberries"
   ],
   "result": {
-    "count": 8,
     "id": "lovely_bites:chocolate_strawberry"
   }
 }

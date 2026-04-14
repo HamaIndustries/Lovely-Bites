@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_strawberry": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lovely_bites:strawberry"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "lovely_bites:strawberry_jam"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_strawberry"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lovely_bites:strawberry_jam"
+    ]
+  }
+}

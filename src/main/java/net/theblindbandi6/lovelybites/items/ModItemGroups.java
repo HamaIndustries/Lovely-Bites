@@ -22,6 +22,7 @@ public class ModItemGroups {
 
                 output.accept(ModItems.STRAWBERRY);
                 output.accept(ModItems.STRAWBERRY_SEEDS);
+                output.accept(ModItems.STRAWBERRY_JAM);
 
                 output.accept(ModItems.CHOCOLATE);
                 output.accept(ModItems.CHOCOLATE_STRAWBERRY);

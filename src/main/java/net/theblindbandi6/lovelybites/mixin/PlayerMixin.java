@@ -49,7 +49,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                     float saturation = food.saturation();
                     //Checks if the targeted player is hungry and food item isn't currently on cooldown
                     int playerHunger = targetPlayer.getFoodData().getFoodLevel();
-                    if(playerHunger < 20 && !feeder.getCooldowns().isOnCooldown(stack)) {
+                    if((playerHunger < 20 || food.canAlwaysEat()) && !feeder.getCooldowns().isOnCooldown(stack)) {
                         //Gets the pos and level of targeted player for particles and sounds
                         BlockPos pos = targetPlayer.blockPosition();
                         Level level = targetPlayer.level();
@@ -61,6 +61,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                             //Applies the effects in the component
                             List<ConsumeEffect> effects = consumable.onConsumeEffects();
                             effects.forEach(action -> action.apply(level, stack, targetPlayer));
+
                         }
                         //Plays an eating sound
                         level.playSound(targetPlayer, pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -86,7 +87,13 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                                 ItemStack newHandStack = useRemainder.convertIntoRemainder(stack, beforeUseCount, feeder.hasInfiniteMaterials(), feeder::handleExtraItemsCreatedOnUse);
                                 feeder.setItemInHand(hand, newHandStack);
                             }
-                            feeder.getCooldowns().addCooldown(stack, 32);
+
+                            if(consumable != null){
+                                int cooldown = consumable.consumeTicks();
+                                feeder.getCooldowns().addCooldown(stack, cooldown);
+                            }else{
+                                feeder.getCooldowns().addCooldown(stack, 32);
+                            }
                         }
                         cir.setReturnValue(InteractionResult.SUCCESS);
                     }else{
