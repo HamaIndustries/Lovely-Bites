@@ -28,6 +28,7 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
 
         valueLookupBuilder(ItemTags.PARROT_POISONOUS_FOOD)
                 .add(ModItems.CHOCOLATE)
+                .add(ModItems.CHOCOLATE_STRAWBERRY)
                 .setReplace(false);
     }
 

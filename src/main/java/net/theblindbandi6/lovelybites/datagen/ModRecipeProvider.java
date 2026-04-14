@@ -35,6 +35,12 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .requires(Items.COCOA_BEANS, 4)
                         .unlockedBy(getHasName(Items.COCOA_BEANS), has(Items.COCOA_BEANS))
                         .save(output);
+
+                shapeless(RecipeCategory.FOOD, ModItems.CHOCOLATE_STRAWBERRY, 8)
+                        .requires(ModItems.CHOCOLATE)
+                        .requires(ModItems.STRAWBERRY, 8)
+                        .unlockedBy(getHasName(ModItems.CHOCOLATE), has(ModItems.CHOCOLATE))
+                        .save(output);
             }
         };
     }

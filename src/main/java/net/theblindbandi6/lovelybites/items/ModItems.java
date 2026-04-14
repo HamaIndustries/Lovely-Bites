@@ -20,6 +20,7 @@ public class ModItems {
     //Items
     public static final Item STRAWBERRY = register("strawberry", Item::new, new Item.Properties().food(ModFoods.STRAWBERRY));
     public static final Item CHOCOLATE = register("chocolate", Item::new, new Item.Properties().food(ModFoods.CHOCOLATE));
+    public static final Item CHOCOLATE_STRAWBERRY = register("chocolate_strawberry", Item::new, new Item.Properties().food(ModFoods.CHOCOLATE_STRAWBERRY));
 
     //Block Items
     public static final Item STRAWBERRY_SEEDS = register("strawberry_seeds", settings ->
