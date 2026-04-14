@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.theblindbandi6.lovelybites.LovelyBites;
-import net.theblindbandi6.lovelybites.blocks.ModBlocks;
 
 public class ModItemGroups {
 

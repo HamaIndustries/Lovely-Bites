@@ -11,11 +11,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Consumable;
-import net.minecraft.world.item.component.UseCooldown;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
@@ -63,8 +60,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                         if (consumable != null) {
                             //Applies the effects in the component
                             List<ConsumeEffect> effects = consumable.onConsumeEffects();
-                            ItemStack finalStack = stack;
-                            effects.forEach(action -> action.apply(level, finalStack, targetPlayer));
+                            effects.forEach(action -> action.apply(level, stack, targetPlayer));
                         }
                         //Plays an eating sound
                         level.playSound(targetPlayer, pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -95,12 +91,10 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                         cir.setReturnValue(InteractionResult.SUCCESS);
                     }else{
                         //Fails if player isn't hungry
-                        //LovelyBites.LOGGER.info("Target Player isn't hungry");
                         cir.setReturnValue(InteractionResult.PASS);
                     }
                 } else {
                     //Fails if item has no food properties
-                    //LovelyBites.LOGGER.info("Item is feedable but has no food properties");
                     cir.setReturnValue(InteractionResult.PASS);
                 }
             }

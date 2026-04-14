@@ -10,7 +10,6 @@ public class LovelyBitesDataGenerator implements DataGeneratorEntrypoint {
 
 		pack.addProvider(ModBlockLootTableProvider::new);
 		pack.addProvider(ModBlockTagProvider::new);
-		pack.addProvider(ModChestLootTableProvider::new);
 		pack.addProvider(ModItemTagProvider::new);
 		pack.addProvider(ModModelProvider::new);
 		pack.addProvider(ModRecipeProvider::new);
