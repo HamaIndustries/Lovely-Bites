@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.theblindbandi6.lovelybites.blocks.ModBlocks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -14,7 +15,7 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider wrapperLookup) {
+    protected void addTags(HolderLookup.@NotNull Provider wrapperLookup) {
         valueLookupBuilder(BlockTags.AZALEA_ROOT_REPLACEABLE)
                 .add(ModBlocks.STRAWBERRY_BUSH)
                 .setReplace(false);
@@ -25,7 +26,7 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "ModBlockTagProvider";
     }
 }

@@ -18,7 +18,7 @@ public class ModItemGroups {
     public static final CreativeModeTab LOVEY_BITES_TAB = FabricCreativeModeTab.builder()
             .icon(() -> new ItemStack(ModItems.STRAWBERRY))
             .title(Component.translatable("creativeTab.lovely_bites"))
-            .displayItems((params, output) -> {
+            .displayItems((_, output) -> {
 
                 output.accept(ModItems.STRAWBERRY);
                 output.accept(ModItems.STRAWBERRY_SEEDS);
@@ -27,6 +27,5 @@ public class ModItemGroups {
                 output.accept(ModItems.CHOCOLATE);
                 output.accept(ModItems.CHOCOLATE_STRAWBERRY);
 
-            })
-            .build();
+            }).build();
 }

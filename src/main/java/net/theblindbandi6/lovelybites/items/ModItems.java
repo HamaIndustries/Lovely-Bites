@@ -8,19 +8,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.Consumables;
 import net.theblindbandi6.lovelybites.LovelyBites;
 import net.theblindbandi6.lovelybites.blocks.ModBlocks;
-import net.theblindbandi6.lovelybites.util.ModConsumables;
-import net.theblindbandi6.lovelybites.util.ModFoods;
 
 import java.util.function.Function;
 
 public class ModItems {
     //Items
     public static final Item STRAWBERRY = register("strawberry", Item::new, new Item.Properties().food(ModFoods.STRAWBERRY));
-    public static final Item STRAWBERRY_JAM = register("strawberry_jam", Item::new, new Item.Properties()
-            .stacksTo(16).food(ModFoods.STRAWBERRY_JAM, ModConsumables.STRAWBERRY_JAM).usingConvertsTo(Items.GLASS_BOTTLE));
+    public static final Item STRAWBERRY_JAM = register("strawberry_jam", Item::new, new Item.Properties().stacksTo(16).food(ModFoods.STRAWBERRY_JAM, ModConsumables.STRAWBERRY_JAM).usingConvertsTo(Items.GLASS_BOTTLE));
     public static final Item CHOCOLATE = register("chocolate", Item::new, new Item.Properties().food(ModFoods.CHOCOLATE));
     public static final Item CHOCOLATE_STRAWBERRY = register("chocolate_strawberry", Item::new, new Item.Properties().food(ModFoods.CHOCOLATE_STRAWBERRY));
 
@@ -30,13 +26,8 @@ public class ModItems {
 
     //Register Methods
     public static <T extends Item> T register(String name, Function<Item.Properties, T> itemFactory, Item.Properties settings) {
-        // Create the item key.
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(LovelyBites.MOD_ID, name));
-
-        // Create the item instance.
         T item = itemFactory.apply(settings.setId(itemKey));
-
-        // Register the item.
         Registry.register(BuiltInRegistries.ITEM, itemKey, item);
 
         return item;
@@ -48,5 +39,6 @@ public class ModItems {
     }
 
     public static void registerItems() {
+        //LovelyBites.LOGGER.info("Registering Items");
     }
 }

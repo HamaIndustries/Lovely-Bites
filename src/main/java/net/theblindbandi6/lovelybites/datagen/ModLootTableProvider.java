@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModBlockLootTableProvider extends FabricBlockLootSubProvider {
-    protected ModBlockLootTableProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+public class ModLootTableProvider extends FabricBlockLootSubProvider {
+    protected ModLootTableProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
     }
 
@@ -30,33 +30,22 @@ public class ModBlockLootTableProvider extends FabricBlockLootSubProvider {
     public void generate() {
         HolderLookup.RegistryLookup<Enchantment> enchantments = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
 
-        this.add(
-                ModBlocks.STRAWBERRY_BUSH,
-                block -> this.applyExplosionDecay(
-                        block,
-                        LootTable.lootTable()
+        this.add(ModBlocks.STRAWBERRY_BUSH, block -> this.applyExplosionDecay(block, LootTable.lootTable()
                                 .withPool(
                                         LootPool.lootPool()
-                                                .when(
-                                                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.STRAWBERRY_BUSH)
-                                                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3))
-                                                )
+                                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.STRAWBERRY_BUSH)
+                                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
                                                 .add(LootItem.lootTableItem(ModItems.STRAWBERRY_SEEDS))
                                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 3.0F)))
-                                                .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE)))
-                                )
+                                                .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE))))
                                 .withPool(
                                         LootPool.lootPool()
-                                                .when(
-                                                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.STRAWBERRY_BUSH)
-                                                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2))
-                                                )
+                                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.STRAWBERRY_BUSH)
+                                                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2)))
                                                 .add(LootItem.lootTableItem(ModItems.STRAWBERRY_SEEDS))
                                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
-                                                .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE)))
-                                )
-                )
-        );
+                                                .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE))))));
+
     }
 
     @Override

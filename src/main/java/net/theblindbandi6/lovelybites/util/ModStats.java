@@ -18,5 +18,6 @@ public class ModStats {
     }
 
     public static void registerStats() {
+        //LovelyBites.LOGGER.info("Registering Statistics");
     }
 }

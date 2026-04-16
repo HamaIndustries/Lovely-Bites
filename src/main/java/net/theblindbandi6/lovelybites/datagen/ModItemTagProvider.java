@@ -28,10 +28,10 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
                 .add(ModItems.CHOCOLATE_STRAWBERRY)
                 .setReplace(false);
 
-
         valueLookupBuilder(ModTags.STRAWBERRIES)
                 .add(ModItems.STRAWBERRY)
                 .setReplace(false);
+
     }
 
     @Override

@@ -18,37 +18,18 @@ import net.theblindbandi6.lovelybites.blocks.custom.StrawberryBushBlock;
 import java.util.function.Function;
 
 public class ModBlocks {
-
-    public static final Block STRAWBERRY_BUSH = register(
-            "strawberry_bush",
-            StrawberryBushBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.PLANT)
-                    .randomTicks()
-                    .noCollision()
-                    .sound(SoundType.SWEET_BERRY_BUSH)
-                    .pushReaction(PushReaction.DESTROY),
-            true
-    );
+    //Strawberry Bush Block
+    public static final Block STRAWBERRY_BUSH = register("strawberry_bush", StrawberryBushBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollision().sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY), true);
 
     //Register Methods
     private static Block register(String name, Function<BlockBehaviour.Properties, Block> blockFactory, BlockBehaviour.Properties settings, boolean shouldRegisterItem) {
-        // Create a registry key for the block
         ResourceKey<Block> blockKey = keyOfBlock(name);
-        // Create the block instance
         Block block = blockFactory.apply(settings.setId(blockKey));
-
-        // Sometimes, you may not want to register an item for the block.
-        // Eg: if it's a technical block like `minecraft:moving_piston` or `minecraft:end_gateway`
         if (shouldRegisterItem) {
-            // Items need to be registered with a different type of registry key, but the ID
-            // can be the same.
             ResourceKey<Item> itemKey = keyOfItem(name);
-
             BlockItem blockItem = new BlockItem(block, new Item.Properties().setId(itemKey).useBlockDescriptionPrefix());
             Registry.register(BuiltInRegistries.ITEM, itemKey, blockItem);
         }
-
         return Registry.register(BuiltInRegistries.BLOCK, blockKey, block);
     }
 
@@ -61,5 +42,6 @@ public class ModBlocks {
     }
 
     public static void registerBlocks() {
+        //LovelyBites.LOGGER.info("Registering Blocks");
     }
 }

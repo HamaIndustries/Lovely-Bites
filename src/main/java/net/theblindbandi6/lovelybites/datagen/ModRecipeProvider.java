@@ -3,14 +3,13 @@ package net.theblindbandi6.lovelybites.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.theblindbandi6.lovelybites.items.ModItems;
 import net.theblindbandi6.lovelybites.util.ModTags;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,12 +19,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    protected RecipeProvider createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter) {
+    protected @NotNull RecipeProvider createRecipeProvider(HolderLookup.@NotNull Provider registryLookup, @NotNull RecipeOutput exporter) {
         return new RecipeProvider(registryLookup, exporter) {
             @Override
             public void buildRecipes() {
-                HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
-
                 shapeless(RecipeCategory.FOOD, ModItems.STRAWBERRY_SEEDS, 2)
                         .requires(ModItems.STRAWBERRY)
                         .unlockedBy(getHasName(ModItems.STRAWBERRY), has(ModItems.STRAWBERRY))
@@ -51,12 +48,13 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .requires(ModTags.STRAWBERRIES)
                         .unlockedBy(getHasName(ModItems.STRAWBERRY), has(ModItems.STRAWBERRY))
                         .save(output);
+
             }
         };
     }
 
     @Override
-    public String getName() {
-        return "ExampleModRecipeProvider";
+    public @NotNull String getName() {
+        return "ModRecipeProvider";
     }
 }
