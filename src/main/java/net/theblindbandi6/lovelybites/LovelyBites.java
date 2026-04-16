@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.theblindbandi6.lovelybites.blocks.ModBlocks;
 import net.theblindbandi6.lovelybites.items.ModItems;
 import net.theblindbandi6.lovelybites.util.ModLootTables;
+import net.theblindbandi6.lovelybites.util.ModStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ public class LovelyBites implements ModInitializer {
 		ModItems.registerItems();
 		ModBlocks.registerBlocks();
 		ModLootTables.registerLootTables();
+		ModStats.registerStats();
 
 		// Register the group.
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, LOVELY_BITES_TAB_KEY, LOVEY_BITES_TAB);

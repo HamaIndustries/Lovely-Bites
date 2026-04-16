@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.theblindbandi6.lovelybites.util.ModStats;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -55,6 +57,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser{
                         Level level = targetPlayer.level();
                         //Applies hunger and saturation to targeted player
                         targetPlayer.getFoodData().eat(hunger, saturation);
+                        feeder.awardStat(ModStats.PLAYERS_FED);
                         //Checks if the item has a consumable component for status effects
                         Consumable consumable = stack.get(DataComponents.CONSUMABLE);
                         if (consumable != null) {

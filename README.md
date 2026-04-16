@@ -1,9 +1,18 @@
 # Lovely Bites
 
-## Setup
+## Feed your friends!
 
-For setup instructions, please see the [Fabric Documentation page](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up) related to the IDE that you are using.
+The main feature of this mod is the ability to feed other players using food in your off-hand.
 
-## License
+This works with every food type and keeps the correct properties of the food you've fed.
+So you can feed a golden apple to someone and they'll obtain the potion effects from it as well as the food and saturation.
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## Strawberries and Chocolate
+
+As a small side addition, this mod adds strawberries and chocolate.
+
+Strawberry seeds can be obtained from farmer villagers and wandering traders.
+These grow into strawberry bushes which provide strawberries.
+You can turn them into jam or combine them with...
+
+Chocolate! Crafted from milk and cocoa beans.
