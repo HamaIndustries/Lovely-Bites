@@ -63,7 +63,6 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
 
                     //Advancement Trigger
                     if (feedingPlayer instanceof ServerPlayer) {
-                        System.out.println("[FED_PLAYER] about to trigger for " + feedingPlayer.getPlainTextName());
                         ModCriteria.FED_PLAYER.trigger((ServerPlayer) feedingPlayer);
                     }
 
