@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "criteria": {
+    "fed_player": {
+      "trigger": "lovely_bites:fed_player"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.lovely_bites.fed_player.description"
+    },
+    "icon": {
+      "id": "lovely_bites:strawberry"
+    },
+    "title": {
+      "translate": "advancements.lovely_bites.fed_player.title"
+    }
+  },
+  "requirements": [
+    [
+      "fed_player"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

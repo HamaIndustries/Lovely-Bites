@@ -8,5 +8,12 @@
   "item.lovely_bites.chocolate": "Chocolate",
   "item.lovely_bites.chocolate_strawberry": "Chocolate Strawberry",
 
-  "block.lovely_bites.strawberry_bush": "Strawberry Bush"
+  "block.lovely_bites.strawberry_bush": "Strawberry Bush",
+
+  "entity.lovely_bites.player.not_hungry": "That player isn't hungry at the moment.",
+
+  "stat.lovely_bites.players_fed": "Players Fed",
+
+  "advancements.lovely_bites.fed_player.title": "Another Grape Sire?",
+  "advancements.lovely_bites.fed_player.description": "Fed another player using food in your offhand"
 }

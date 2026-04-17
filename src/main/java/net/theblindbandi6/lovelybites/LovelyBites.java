@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.theblindbandi6.lovelybites.advancement.ModCriteria;
 import net.theblindbandi6.lovelybites.blocks.ModBlocks;
 import net.theblindbandi6.lovelybites.items.ModItems;
 import net.theblindbandi6.lovelybites.blocks.ModBuiltInLootTables;
@@ -22,10 +23,12 @@ public class LovelyBites implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Initializing a sweet treat for myself");
 
+		ModStats.registerStats();
+		ModCriteria.registerCriterion();
+
 		ModItems.registerItems();
 		ModBlocks.registerBlocks();
 		ModBuiltInLootTables.registerLootTables();
-		ModStats.registerStats();
 
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, LOVELY_BITES_TAB_KEY, LOVEY_BITES_TAB);
 
