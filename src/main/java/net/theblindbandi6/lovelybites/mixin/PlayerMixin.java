@@ -14,6 +14,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
@@ -59,11 +61,11 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                     targetPlayer.getFoodData().eat(hunger, saturation);
 
                     //Statistic increment
-                    feedingPlayer.awardStat(ModStats.PLAYERS_FED);
+                    feedingPlayer.awardStat(ModStats.FOOD_FED_TO_PLAYERS);
 
                     //Advancement Trigger
                     if (feedingPlayer instanceof ServerPlayer) {
-                        ModCriteria.FED_PLAYER.trigger((ServerPlayer) feedingPlayer);
+                        ModCriteria.FOOD_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
                     }
 
                     //Check for consumable component for Potion Effects
@@ -112,6 +114,41 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                     cir.setReturnValue(InteractionResult.PASS);
 
                 }
+            }
+
+            //Check for POTION_CONTENTS data component in item stack
+            PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
+            if (potionContents != null && !feedingPlayer.getCooldowns().isOnCooldown(itemStack)) {
+
+                //Apply Potion Effects
+                float durationScale = itemStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F);
+                potionContents.forEachEffect(effect -> targetPlayer.addEffect(effect, feedingPlayer), durationScale);
+
+                //Statistic increment
+                feedingPlayer.awardStat(ModStats.POTIONS_FED_TO_PLAYERS);
+
+                //Advancement Trigger
+                if (feedingPlayer instanceof ServerPlayer) {
+                    ModCriteria.POTION_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
+                }
+
+                //Play eating effect and send particles
+                BlockPos pos = targetPlayer.blockPosition();
+                Level level = targetPlayer.level();
+                level.playSound(targetPlayer, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                if (targetPlayer.level() instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
+                }
+
+                //Check for survival
+                if (!feedingPlayer.isCreative()) {
+                    feedingPlayer.addItem(Items.GLASS_BOTTLE.getDefaultInstance());
+                    feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
+                    itemStack.consume(1, feedingPlayer);
+                }
+
+                cir.setReturnValue(InteractionResult.SUCCESS);
+
             }
         }
         return InteractionResult.PASS;

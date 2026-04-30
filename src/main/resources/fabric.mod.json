@@ -3,15 +3,14 @@
 	"id": "lovely_bites",
 	"version": "${version}",
 	"name": "Lovely Bites",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Feed your friends! Adds the ability to feed food in your offhand to other players, as well as a small addition in Strawberries and Chocolate.",
 	"authors": [
-		"Me!"
+		"TheBlindBandit6"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/theblindband/Lovely-Bites"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/lovely_bites/icon.png",
 	"environment": "*",
 	"entrypoints": {

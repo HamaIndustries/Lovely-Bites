@@ -1,0 +1,25 @@
+{
+  "parent": "lovely_bites:food_fed_to_player",
+  "criteria": {
+    "potion_fed_to_player": {
+      "trigger": "lovely_bites:potion_fed_to_player"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.lovely_bites.potion_fed_to_player.description"
+    },
+    "icon": {
+      "id": "minecraft:glass_bottle"
+    },
+    "title": {
+      "translate": "advancements.lovely_bites.potion_fed_to_player.title"
+    }
+  },
+  "requirements": [
+    [
+      "potion_fed_to_player"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

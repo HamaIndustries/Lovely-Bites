@@ -8,7 +8,8 @@ import net.minecraft.stats.Stats;
 import net.theblindbandi6.lovelybites.LovelyBites;
 
 public class ModStats {
-    public static final Identifier PLAYERS_FED = makeCustomStat("players_fed", StatFormatter.DEFAULT);
+    public static final Identifier FOOD_FED_TO_PLAYERS = makeCustomStat("food_fed_to_players", StatFormatter.DEFAULT);
+    public static final Identifier POTIONS_FED_TO_PLAYERS = makeCustomStat("potions_fed_to_players", StatFormatter.DEFAULT);
 
     private static Identifier makeCustomStat(final String name, final StatFormatter formatter) {
         Identifier location = Identifier.fromNamespaceAndPath(LovelyBites.MOD_ID, name);

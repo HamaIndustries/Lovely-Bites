@@ -40,7 +40,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false
                 )
-                .addCriterion("fed_player", ModCriteria.FED_PLAYER.createCriterion(new FedPlayerCriterion.Conditions(Optional.empty())))
+                .addCriterion("fed_player", ModCriteria.FOOD_FED_TO_PLAYER.createCriterion(new FedPlayerCriterion.Conditions(Optional.empty())))
                 .save(consumer, LovelyBites.MOD_ID + ":fed_player");
                 */
     }
