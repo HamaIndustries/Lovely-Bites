@@ -1,0 +1,25 @@
+{
+  "parent": "lovely_bites:potion_fed_to_player",
+  "criteria": {
+    "milk_fed_to_player": {
+      "trigger": "lovely_bites:milk_fed_to_player"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.lovely_bites.milk_fed_to_player.description"
+    },
+    "icon": {
+      "id": "minecraft:milk_bucket"
+    },
+    "title": {
+      "translate": "advancements.lovely_bites.milk_fed_to_player.title"
+    }
+  },
+  "requirements": [
+    [
+      "milk_fed_to_player"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

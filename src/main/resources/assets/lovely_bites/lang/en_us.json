@@ -14,10 +14,14 @@
 
   "stat.lovely_bites.food_fed_to_players": "Food Fed",
   "stat.lovely_bites.potions_fed_to_players": "Potions Given",
+  "stat.lovely_bites.milk_fed_to_players": "Milk Buckets Given",
 
   "advancements.lovely_bites.food_fed_to_player.title": "Another Grape Sire?",
   "advancements.lovely_bites.food_fed_to_player.description": "Fed another player using food in your offhand",
 
   "advancements.lovely_bites.potion_fed_to_player.title": "I Require Your Strongest Potions!",
-  "advancements.lovely_bites.potion_fed_to_player.description": "Gave another player a potion in your offhand"
+  "advancements.lovely_bites.potion_fed_to_player.description": "Gave another player a potion from your offhand",
+
+  "advancements.lovely_bites.milk_fed_to_player.title": "Good for Your Bones",
+  "advancements.lovely_bites.milk_fed_to_player.description": "Gave another player a milk bucket from your offhand"
 }

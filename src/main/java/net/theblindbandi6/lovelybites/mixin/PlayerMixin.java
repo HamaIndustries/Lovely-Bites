@@ -78,7 +78,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
 
                     //Play eating effect and send particles
                     BlockPos pos = targetPlayer.blockPosition();
-                    level.playSound(targetPlayer, pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    level.playSound(null , pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
                     if (targetPlayer.level() instanceof ServerLevel serverLevel) {
                         serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
                     }
@@ -135,7 +135,7 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                 //Play eating effect and send particles
                 BlockPos pos = targetPlayer.blockPosition();
                 Level level = targetPlayer.level();
-                level.playSound(targetPlayer, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
                 if (targetPlayer.level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
                 }
@@ -143,6 +143,38 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
                 //Check for survival
                 if (!feedingPlayer.isCreative()) {
                     feedingPlayer.addItem(Items.GLASS_BOTTLE.getDefaultInstance());
+                    feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
+                    itemStack.consume(1, feedingPlayer);
+                }
+
+                cir.setReturnValue(InteractionResult.SUCCESS);
+
+            }
+
+            if(itemStack.is(Items.MILK_BUCKET)){
+
+                //Remove all potion effects
+                targetPlayer.removeAllEffects();
+
+                //Statistic increment
+                feedingPlayer.awardStat(ModStats.MILK_FED_TO_PLAYERS);
+
+                //Advancement Trigger
+                if (feedingPlayer instanceof ServerPlayer) {
+                    ModCriteria.MILK_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
+                }
+
+                //Play eating effect and send particles
+                BlockPos pos = targetPlayer.blockPosition();
+                Level level = targetPlayer.level();
+                level.playSound(null, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                if (targetPlayer.level() instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
+                }
+
+                //Check for survival
+                if (!feedingPlayer.isCreative()) {
+                    feedingPlayer.addItem(Items.BUCKET.getDefaultInstance());
                     feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
                     itemStack.consume(1, feedingPlayer);
                 }

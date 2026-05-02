@@ -10,6 +10,7 @@ import net.theblindbandi6.lovelybites.LovelyBites;
 public class ModStats {
     public static final Identifier FOOD_FED_TO_PLAYERS = makeCustomStat("food_fed_to_players", StatFormatter.DEFAULT);
     public static final Identifier POTIONS_FED_TO_PLAYERS = makeCustomStat("potions_fed_to_players", StatFormatter.DEFAULT);
+    public static final Identifier MILK_FED_TO_PLAYERS = makeCustomStat("milk_fed_to_players", StatFormatter.DEFAULT);
 
     private static Identifier makeCustomStat(final String name, final StatFormatter formatter) {
         Identifier location = Identifier.fromNamespaceAndPath(LovelyBites.MOD_ID, name);
