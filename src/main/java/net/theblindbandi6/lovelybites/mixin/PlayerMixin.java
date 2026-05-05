@@ -22,6 +22,7 @@ import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.theblindbandi6.lovelybites.advancement.ModCriteria;
+import net.theblindbandi6.lovelybites.events.PlayerFedCallback;
 import net.theblindbandi6.lovelybites.util.ModStats;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,140 +48,157 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
             Player feedingPlayer = (Player) (Object) this;
             ItemStack itemStack = feedingPlayer.getItemInHand(hand);
 
-            //Check for FOOD data component in item stack
-            FoodProperties food = itemStack.get(DataComponents.FOOD);
-            if (food != null) {
+            //Check for itemStack cooldown
+            if (!feedingPlayer.getCooldowns().isOnCooldown(itemStack)) {
 
-                //Check target player's food levels and item stack cooldown
-                int playerHunger = targetPlayer.getFoodData().getFoodLevel();
-                if ((playerHunger < 20 || food.canAlwaysEat()) && !feedingPlayer.getCooldowns().isOnCooldown(itemStack)) {
+                /* FOOD LOGIC */
 
-                    //Feed target player
-                    int hunger = food.nutrition();
-                    float saturation = food.saturation();
-                    targetPlayer.getFoodData().eat(hunger, saturation);
+                //Check for FOOD data component in item stack
+                FoodProperties food = itemStack.get(DataComponents.FOOD);
+                if (food != null) {
+
+                    //Check target player's food levels and item stack cooldown
+                    int playerHunger = targetPlayer.getFoodData().getFoodLevel();
+                    if ((playerHunger < 20 || food.canAlwaysEat())) {
+
+                        //Event Callback for Food
+                        PlayerFedCallback.EVENT.invoker().onFed(feedingPlayer, targetPlayer);
+
+                        //Feed target player
+                        int hunger = food.nutrition();
+                        float saturation = food.saturation();
+                        targetPlayer.getFoodData().eat(hunger, saturation);
+
+                        //Statistic increment
+                        feedingPlayer.awardStat(ModStats.FOOD_FED_TO_PLAYERS);
+
+                        //Advancement Trigger
+                        if (feedingPlayer instanceof ServerPlayer) {
+                            ModCriteria.FOOD_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
+                        }
+
+                        //Check for consumable component for Potion Effects
+                        Level level = targetPlayer.level();
+                        Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
+                        if (consumable != null) {
+                            List<ConsumeEffect> effects = consumable.onConsumeEffects();
+                            effects.forEach(action -> action.apply(level, itemStack, targetPlayer));
+                        }
+
+                        //Play eating effect and send particles
+                        BlockPos pos = targetPlayer.blockPosition();
+                        level.playSound(null, pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        if (targetPlayer.level() instanceof ServerLevel serverLevel) {
+                            serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
+                        }
+
+                        //Check for survival
+                        if (!feedingPlayer.isCreative()) {
+
+                            //Give leftovers e.g. Bowl, Bottle
+                            int stackCount = itemStack.getCount();
+                            UseRemainder leftover = itemStack.get(DataComponents.USE_REMAINDER);
+                            if (leftover != null) {
+                                ItemStack newHandStack = leftover.convertIntoRemainder(itemStack, stackCount, feedingPlayer.hasInfiniteMaterials(), feedingPlayer::handleExtraItemsCreatedOnUse);
+                                feedingPlayer.setItemInHand(hand, newHandStack);
+                            }
+
+                            //Set cooldown
+                            if (consumable != null) {
+                                int cooldown = consumable.consumeTicks();
+                                feedingPlayer.getCooldowns().addCooldown(itemStack, cooldown);
+                            } else {
+                                feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
+                            }
+
+                            itemStack.consume(1, feedingPlayer);
+                        }
+
+                        cir.setReturnValue(InteractionResult.SUCCESS);
+
+                    } else {
+
+                        //Send message to feeding player if target player is full
+                        feedingPlayer.sendOverlayMessage(Component.translatable("entity.lovely_bites.player.not_hungry"));
+                        cir.setReturnValue(InteractionResult.PASS);
+
+                    }
+                }
+
+                /* POTION LOGIC */
+
+                //Check for POTION_CONTENTS data component in item stack
+                PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
+                if (potionContents != null) {
+
+                    //Event Callback for Potions
+
+                    //Apply Potion Effects
+                    float durationScale = itemStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F);
+                    potionContents.forEachEffect(effect -> targetPlayer.addEffect(effect, feedingPlayer), durationScale);
 
                     //Statistic increment
-                    feedingPlayer.awardStat(ModStats.FOOD_FED_TO_PLAYERS);
+                    feedingPlayer.awardStat(ModStats.POTIONS_FED_TO_PLAYERS);
 
                     //Advancement Trigger
                     if (feedingPlayer instanceof ServerPlayer) {
-                        ModCriteria.FOOD_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
-                    }
-
-                    //Check for consumable component for Potion Effects
-                    Level level = targetPlayer.level();
-                    Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
-                    if (consumable != null) {
-                        List<ConsumeEffect> effects = consumable.onConsumeEffects();
-                        effects.forEach(action -> action.apply(level, itemStack, targetPlayer));
+                        ModCriteria.POTION_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
                     }
 
                     //Play eating effect and send particles
                     BlockPos pos = targetPlayer.blockPosition();
-                    level.playSound(null , pos, SoundEvents.FOX_EAT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    Level level = targetPlayer.level();
+                    level.playSound(null, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
                     if (targetPlayer.level() instanceof ServerLevel serverLevel) {
                         serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
                     }
 
                     //Check for survival
                     if (!feedingPlayer.isCreative()) {
-
-                        //Give leftovers e.g. Bowl, Bottle
-                        int stackCount = itemStack.getCount();
-                        UseRemainder leftover = itemStack.get(DataComponents.USE_REMAINDER);
-                        if (leftover != null) {
-                            ItemStack newHandStack = leftover.convertIntoRemainder(itemStack, stackCount, feedingPlayer.hasInfiniteMaterials(), feedingPlayer::handleExtraItemsCreatedOnUse);
-                            feedingPlayer.setItemInHand(hand, newHandStack);
-                        }
-
-                        //Set cooldown
-                        if (consumable != null) {
-                            int cooldown = consumable.consumeTicks();
-                            feedingPlayer.getCooldowns().addCooldown(itemStack, cooldown);
-                        } else {
-                            feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
-                        }
-
+                        feedingPlayer.addItem(Items.GLASS_BOTTLE.getDefaultInstance());
+                        feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
                         itemStack.consume(1, feedingPlayer);
                     }
 
                     cir.setReturnValue(InteractionResult.SUCCESS);
 
-                } else {
-
-                    //Send message to feeding player if target player is full
-                    feedingPlayer.sendOverlayMessage(Component.translatable("entity.lovely_bites.player.not_hungry"));
-                    cir.setReturnValue(InteractionResult.PASS);
-
-                }
-            }
-
-            //Check for POTION_CONTENTS data component in item stack
-            PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
-            if (potionContents != null && !feedingPlayer.getCooldowns().isOnCooldown(itemStack)) {
-
-                //Apply Potion Effects
-                float durationScale = itemStack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 1.0F);
-                potionContents.forEachEffect(effect -> targetPlayer.addEffect(effect, feedingPlayer), durationScale);
-
-                //Statistic increment
-                feedingPlayer.awardStat(ModStats.POTIONS_FED_TO_PLAYERS);
-
-                //Advancement Trigger
-                if (feedingPlayer instanceof ServerPlayer) {
-                    ModCriteria.POTION_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
                 }
 
-                //Play eating effect and send particles
-                BlockPos pos = targetPlayer.blockPosition();
-                Level level = targetPlayer.level();
-                level.playSound(null, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
-                if (targetPlayer.level() instanceof ServerLevel serverLevel) {
-                    serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
+                /* MILK BUCKET LOGIC */
+
+                if (itemStack.is(Items.MILK_BUCKET)) {
+
+                    //Event Callback for Milk Buckets
+
+                    //Remove all potion effects
+                    targetPlayer.removeAllEffects();
+
+                    //Statistic increment
+                    feedingPlayer.awardStat(ModStats.MILK_FED_TO_PLAYERS);
+
+                    //Advancement Trigger
+                    if (feedingPlayer instanceof ServerPlayer) {
+                        ModCriteria.MILK_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
+                    }
+
+                    //Play eating effect and send particles
+                    BlockPos pos = targetPlayer.blockPosition();
+                    Level level = targetPlayer.level();
+                    level.playSound(null, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    if (targetPlayer.level() instanceof ServerLevel serverLevel) {
+                        serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
+                    }
+
+                    //Check for survival
+                    if (!feedingPlayer.isCreative()) {
+                        feedingPlayer.addItem(Items.BUCKET.getDefaultInstance());
+                        feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
+                        itemStack.consume(1, feedingPlayer);
+                    }
+
+                    cir.setReturnValue(InteractionResult.SUCCESS);
+
                 }
-
-                //Check for survival
-                if (!feedingPlayer.isCreative()) {
-                    feedingPlayer.addItem(Items.GLASS_BOTTLE.getDefaultInstance());
-                    feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
-                    itemStack.consume(1, feedingPlayer);
-                }
-
-                cir.setReturnValue(InteractionResult.SUCCESS);
-
-            }
-
-            if(itemStack.is(Items.MILK_BUCKET)){
-
-                //Remove all potion effects
-                targetPlayer.removeAllEffects();
-
-                //Statistic increment
-                feedingPlayer.awardStat(ModStats.MILK_FED_TO_PLAYERS);
-
-                //Advancement Trigger
-                if (feedingPlayer instanceof ServerPlayer) {
-                    ModCriteria.MILK_FED_TO_PLAYER.trigger((ServerPlayer) feedingPlayer);
-                }
-
-                //Play eating effect and send particles
-                BlockPos pos = targetPlayer.blockPosition();
-                Level level = targetPlayer.level();
-                level.playSound(null, pos, SoundEvents.WITCH_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
-                if (targetPlayer.level() instanceof ServerLevel serverLevel) {
-                    serverLevel.sendParticles(ParticleTypes.HEART, targetPlayer.getX(), targetPlayer.getY() + targetPlayer.getBbHeight() * 0.9, targetPlayer.getZ(), 3, 0.3, 0.2, 0.3, 0.02);
-                }
-
-                //Check for survival
-                if (!feedingPlayer.isCreative()) {
-                    feedingPlayer.addItem(Items.BUCKET.getDefaultInstance());
-                    feedingPlayer.getCooldowns().addCooldown(itemStack, 32);
-                    itemStack.consume(1, feedingPlayer);
-                }
-
-                cir.setReturnValue(InteractionResult.SUCCESS);
-
             }
         }
         return InteractionResult.PASS;
